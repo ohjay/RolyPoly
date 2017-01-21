@@ -55,6 +55,7 @@ captures/
 .idea/misc.xml
 .idea/copyright/profiles_settings.xml
 .idea/vcs.xml
+/idea/.name
 
 
 # Keystore files

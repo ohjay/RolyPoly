@@ -1,4 +1,4 @@
-package xyz.owenjow.facialrecognizerer;
+package xyz.owenjow.rolypoly;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
