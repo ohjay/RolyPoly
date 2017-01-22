@@ -115,7 +115,8 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         try{
-            mCamera = Camera.open(findFrontFacingCamera());//you can use open(int) to use different cameras
+            releaseCamera();
+            mCamera = Camera.open();//you can use open(int) to use different cameras
         } catch (Exception e){
             Log.d("ERROR", "Failed to get camera: " + e.getMessage());
         }
@@ -202,6 +203,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
         return cameraId;
+    }
+
+    public void releaseCamera(){
+        if (mCamera != null){
+            mCamera.release();        // release the camera for other applications
+            mCamera = null;
+        }
     }
 
 }
