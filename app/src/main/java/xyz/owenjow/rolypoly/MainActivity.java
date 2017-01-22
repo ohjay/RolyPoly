@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.ActionBar;
@@ -12,6 +13,8 @@ import android.os.Bundle;
 import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
+import android.view.Gravity;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -52,6 +55,19 @@ public class MainActivity extends AppCompatActivity {
             mCameraPreview = new CameraPreview(this, mCamera);//create a SurfaceView to show camera data
             FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
             camera_view.addView(mCameraPreview);//add the SurfaceView to the layout
+
+            Button captureButton = new Button(this);
+            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    FrameLayout.LayoutParams.WRAP_CONTENT,
+                    Gravity.CENTER_VERTICAL | Gravity.RIGHT
+            );
+            captureButton.setLayoutParams(params);
+            camera_view.addView(captureButton);
+
+            Drawable cameraButton = getResources().getDrawable(R.drawable.round_button);
+            cameraButton.setAlpha(170);
+            captureButton.setBackground(cameraButton);
         }
     }
 
