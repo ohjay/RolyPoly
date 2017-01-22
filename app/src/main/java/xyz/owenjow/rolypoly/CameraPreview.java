@@ -19,7 +19,6 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
-        mCamera.setDisplayOrientation(90);
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -71,11 +70,20 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
             Log.d(TAG, "Error starting camera preview: " + e.getMessage());
         }
 
-        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            Camera.Parameters parameters = mCamera.getParameters();
+        Camera.Parameters parameters = mCamera.getParameters();
+        if (this.getResources().getConfiguration().orientation != Configuration.ORIENTATION_LANDSCAPE) {
+            parameters.set("orientation", "portrait");
+            mCamera.setDisplayOrientation(90);
+            parameters.setRotation(90);
+            mCamera.startPreview();
+        }
+        else {
+            // This is an undocumented although widely known feature
             parameters.set("orientation", "landscape");
             // For Android 2.2 and above
             mCamera.setDisplayOrientation(0);
+            // Uncomment for Android 2.0 and above
+            parameters.setRotation(0);
         }
     }
 }
