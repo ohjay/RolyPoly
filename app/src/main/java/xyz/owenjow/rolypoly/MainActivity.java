@@ -4,6 +4,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +23,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -68,6 +74,51 @@ public class MainActivity extends AppCompatActivity {
             Drawable cameraButton = getResources().getDrawable(R.drawable.round_button);
             cameraButton.setAlpha(170);
             captureButton.setBackground(cameraButton);
+
+            mCameraPreview.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
+
+                    if (mCamera != null) {
+                        Camera camera = mCamera;
+                        camera.cancelAutoFocus();
+                        Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
+
+                        Camera.Parameters parameters = camera.getParameters();
+                        if (parameters.getFocusMode() != Camera.Parameters.FOCUS_MODE_AUTO) {
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        }
+                        if (parameters.getMaxNumFocusAreas() > 0) {
+                            List<Camera.Area> mylist = new ArrayList<Camera.Area>();
+                            mylist.add(new Camera.Area(focusRect, 1000));
+                            parameters.setFocusAreas(mylist);
+                        }
+
+                        try {
+                            camera.cancelAutoFocus();
+                            camera.setParameters(parameters);
+                            camera.startPreview();
+                            camera.autoFocus(new Camera.AutoFocusCallback() {
+                                @Override
+                                public void onAutoFocus(boolean success, Camera camera) {
+                                    if (camera.getParameters().getFocusMode() != Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) {
+                                        Camera.Parameters parameters = camera.getParameters();
+                                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                                        if (parameters.getMaxNumFocusAreas() > 0) {
+                                            parameters.setFocusAreas(null);
+                                        }
+                                        camera.setParameters(parameters);
+                                        camera.startPreview();
+                                    }
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -106,5 +157,31 @@ public class MainActivity extends AppCompatActivity {
     {
         Intent intent = new Intent(this, IdentifyActivity.class);
         startActivity(intent);
+    }
+
+    private int focusAreaSize = 210;
+    /**
+     * Convert touch position x:y to {@link Camera.Area} position -1000:-1000 to 1000:1000.
+     */
+    private Rect calculateTapArea(float x, float y, float coefficient) {
+        int areaSize = Float.valueOf(focusAreaSize * coefficient).intValue();
+
+        int left = clamp((int) x - areaSize / 2, 0, mCameraPreview.getWidth() - areaSize);
+        int top = clamp((int) y - areaSize / 2, 0, mCameraPreview.getHeight() - areaSize);
+
+        RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
+        Matrix.mapRect(rectF);
+
+        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
+    }
+
+    private int clamp(int x, int min, int max) {
+        if (x > max) {
+            return max;
+        }
+        if (x < min) {
+            return min;
+        }
+        return x;
     }
 }

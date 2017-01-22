@@ -6,6 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.hardware.Camera;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -14,6 +15,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static xyz.owenjow.rolypoly.CameraPreview.mFaceView;
 import static xyz.owenjow.rolypoly.MainActivity.mCamera;
 
 public class CameraActivity extends Activity {
@@ -22,6 +25,8 @@ public class CameraActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        addContentView(mFaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         // Create an instance of Camera
         try{

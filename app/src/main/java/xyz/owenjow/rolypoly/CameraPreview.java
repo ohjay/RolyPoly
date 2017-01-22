@@ -1,12 +1,13 @@
 package xyz.owenjow.rolypoly;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
+import android.view.Window;
 
 import java.io.IOException;
 
@@ -20,7 +21,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private Camera.Face[] mFaces;
 
     // Draw rectangles and other fancy stuff:
-    private FaceOverlayView mFaceView;
+    public static FaceOverlayView mFaceView;
 
     /**
      * Sets the faces for the overlay view, so it can be updated
@@ -40,8 +41,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
         mCamera = camera;
 
         // Now create the OverlayView:
-        mFaceView = new FaceOverlayView(this);
-        addContentView(mFaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+        mFaceView = new FaceOverlayView(context);
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
