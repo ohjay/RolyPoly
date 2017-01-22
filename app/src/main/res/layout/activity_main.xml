@@ -39,19 +39,10 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-<<<<<<< HEAD
                 android:onClick="takePicture" />
 
         </LinearLayout>
 
-=======
-                android:text="@string/dummy_button" />
-            <Button
-                android:text="Capture"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/capture_button"
-                android:onClick="goCapture" />
             <Button
                 android:text="Identify"
                 android:layout_width="wrap_content"
@@ -59,10 +50,6 @@
                 android:id="@+id/identify_button"
                 android:onClick="goIdentify" />
 
-        </LinearLayout>
-
-     
->>>>>>> master
     </FrameLayout>
 
 </FrameLayout>
