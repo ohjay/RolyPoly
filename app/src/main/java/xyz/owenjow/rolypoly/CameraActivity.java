@@ -3,6 +3,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.hardware.Camera;
@@ -10,6 +12,7 @@ import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.widget.ImageView;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -81,6 +84,17 @@ public class CameraActivity extends Activity {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
+
+                if(pictureFile.exists()){
+
+                    Bitmap myBitmap = BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
+
+                    ImageView myImage = (ImageView) findViewById(R.id.image_preview);
+
+                    myImage.setImageBitmap(myBitmap);
+
+                }
+
                 Log.d("picture", "wrote file");
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());

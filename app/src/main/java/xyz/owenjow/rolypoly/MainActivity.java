@@ -86,11 +86,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void goCapture(View view)
-    {
-        Intent intent = new Intent(this, CaptureActivity.class);
-        startActivity(intent);
-    }
     public void goIdentify(View view)
     {
         Intent intent = new Intent(this, IdentifyActivity.class);
