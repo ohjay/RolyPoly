@@ -107,11 +107,19 @@ public class CameraActivity extends Activity {
                     myImage.setImageBitmap(myBitmap);
 
                     Matrix matrix = new Matrix();
-                    myImage.setScaleType(ImageView.ScaleType.MATRIX);   //required
-                    matrix.postRotate((float) 90, myImage.getDrawable().getBounds().width()/2,
-                            myImage.getDrawable().getBounds().height()/2);
-                    myImage.setImageMatrix(matrix);
-                    myImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+//                    myImage.setScaleType(ImageView.ScaleType.MATRIX);
+//                    matrix.postRotate((float) 90, myImage.getDrawable().getBounds().width()/2,
+//                            myImage.getDrawable().getBounds().height()/2);
+//                    myImage.setImageMatrix(matrix);
+
+                    matrix.postRotate(90);
+
+                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(myBitmap,myImage.getDrawable().getBounds().width(),
+                            myImage.getDrawable().getBounds().height(),true);
+
+                    Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
+//                    myImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    myImage.setImageBitmap(rotatedBitmap);
 
                     Log.d("ImagePreview", "inserted into ImageView");
 
