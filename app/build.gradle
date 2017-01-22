@@ -27,5 +27,4 @@ dependencies {
     compile 'com.android.support:design:24.0.0'
     compile 'com.google.android.gms:play-services:8.1.0'
     testCompile 'junit:junit:4.12'
-    compile files('src/main/libs/opencv-320.jar')
 }
