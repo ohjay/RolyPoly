@@ -2,10 +2,10 @@ package xyz.owenjow.rolypoly;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -165,6 +165,11 @@ public class MainActivity extends AppCompatActivity {
     public void goCapture(View view)
     {
         Intent intent = new Intent(this, CaptureActivity.class);
+        startActivity(intent);
+    }
+    public void goIdentify(View view)
+    {
+        Intent intent = new Intent(this, IdentifyActivity.class);
         startActivity(intent);
     }
 }
