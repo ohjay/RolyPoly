@@ -13,6 +13,8 @@ import android.hardware.Camera;
 import android.os.Handler;
 import android.util.Log;
 import android.widget.FrameLayout;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
 
@@ -84,4 +86,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    public void goCapture(View view)
+    {
+        Intent intent = new Intent(this, CaptureActivity.class);
+        startActivity(intent);
+    }
+    public void goIdentify(View view)
+    {
+        Intent intent = new Intent(this, IdentifyActivity.class);
+        startActivity(intent);
+    }
 }
