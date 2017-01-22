@@ -9,6 +9,8 @@ import android.os.Handler;
 import android.view.MotionEvent;
 import android.view.View;
 
+import xyz.owenjow.facialrecognizerer.R;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -165,6 +167,11 @@ public class MainActivity extends AppCompatActivity {
     public void goCapture(View view)
     {
         Intent intent = new Intent(this, CaptureActivity.class);
+        startActivity(intent);
+    }
+    public void goIdentify(View view)
+    {
+        Intent intent = new Intent(this, IdentifyActivity.class);
         startActivity(intent);
     }
 }
