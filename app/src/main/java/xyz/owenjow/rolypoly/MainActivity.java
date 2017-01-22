@@ -145,4 +145,17 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    public void toggleIdle(View view) {
+        FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
+        FrameLayout idle_view = (FrameLayout)findViewById(R.id.idle);
+
+        if (camera_view.getVisibility() == View.VISIBLE) {
+            camera_view.setVisibility(View.INVISIBLE);
+            idle_view.setVisibility(View.VISIBLE);
+        } else {
+            camera_view.setVisibility(View.VISIBLE);
+            idle_view.setVisibility(View.INVISIBLE);
+        }
+    }
+
 }
