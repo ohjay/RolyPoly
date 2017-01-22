@@ -159,7 +159,7 @@ public class MainActivity extends AppCompatActivity {
      */
     private void delayedHide(int delayMillis) {
         mHideHandler.removeCallbacks(mHideRunnable);
-        mHideHandler.postDelayed(mHideRunnable, delayMillis)
+        mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
     public void goCapture(View view)
