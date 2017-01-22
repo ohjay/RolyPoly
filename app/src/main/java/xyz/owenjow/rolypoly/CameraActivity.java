@@ -1,7 +1,15 @@
 package xyz.owenjow.rolypoly;
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Bundle;
 import android.hardware.Camera;
+import android.os.Environment;
+import android.util.Log;
+import android.widget.FrameLayout;
+
+import java.io.File;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class CameraActivity extends Activity {
 
