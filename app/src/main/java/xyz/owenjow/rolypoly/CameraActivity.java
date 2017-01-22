@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static xyz.owenjow.rolypoly.MainActivity.findFrontFacingCamera;
+
 public class CameraActivity extends Activity {
 
     private Camera mCamera;
@@ -24,9 +26,14 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Create an instance of Camera
-        mCamera = getIntent().getSerializableExtra("CAMERA_INSTANCE");
+        releaseCamera();
+        try{
+            mCamera = Camera.open(findFrontFacingCamera());//you can use open(int) to use different cameras
+            mCamera.takePicture(null, null, mPicture);
+        } catch (Exception e){
+            Log.d("ERROR", "Failed to get camera: " + e.getMessage());
+        }
 
-        mCamera.takePicture(null, null, mPicture);
     }
 
     public static final int MEDIA_TYPE_IMAGE = 1;
@@ -95,7 +102,7 @@ public class CameraActivity extends Activity {
         }
     };
 
-    private void releaseCamera(){
+    public void releaseCamera(){
         if (mCamera != null){
             mCamera.release();        // release the camera for other applications
             mCamera = null;

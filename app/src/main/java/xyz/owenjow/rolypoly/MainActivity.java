@@ -183,13 +183,12 @@ public class MainActivity extends AppCompatActivity {
     public Camera CAMERA_INSTANCE = mCamera;
     public void takePicture(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
-        intent.putExtra(CAMERA_INSTANCE, mCamera);
         startActivity(intent);
     }
 
-    private int cameraId;
-    private boolean cameraFront;
-    private int findFrontFacingCamera() {
+    public static int cameraId;
+    public static boolean cameraFront;
+    public static int findFrontFacingCamera() {
 
         // Search for the front facing camera
         int numberOfCameras = Camera.getNumberOfCameras();
