@@ -11,5 +11,5 @@ public class CaptureActivity extends AppCompatActivity {
         setContentView(R.layout.activity_capture);
 
     }
-    
+
 }
