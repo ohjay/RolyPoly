@@ -11,6 +11,7 @@ import android.graphics.drawable.Drawable;
 import android.hardware.Camera;
 import android.text.TextPaint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 /**
@@ -64,6 +65,7 @@ public class FaceOverlayView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (mFaces != null && mFaces.length > 0) {
+            Log.d("draw faceoverlay", mFaces.toString());
             Matrix matrix = new Matrix();
             Util.prepareMatrix(matrix, false, mDisplayOrientation, getWidth(), getHeight());
             canvas.save();
