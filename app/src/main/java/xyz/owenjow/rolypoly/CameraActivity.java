@@ -5,9 +5,6 @@ import android.os.Bundle;
 import android.hardware.Camera;
 import android.os.Environment;
 import android.util.Log;
-import android.view.View;
-import android.widget.Button;
-import android.widget.FrameLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -117,3 +114,5 @@ public class CameraActivity extends Activity {
         }
     }
 }
+
+
