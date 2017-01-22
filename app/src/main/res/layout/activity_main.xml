@@ -31,15 +31,15 @@
             android:orientation="horizontal"
             tools:ignore="UselessParent">
 
-            <!--<Button-->
-                <!--android:id="@+id/button_capture"-->
-                <!--android:text="@string/capture_button"-->
-                <!--style="?metaButtonBarButtonStyle"-->
-                <!--android:background="@drawable/round_button"-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:onClick="takePicture" />-->
+            <Button
+                android:id="@+id/button_capture"
+                android:text="@string/capture_button"
+                style="?metaButtonBarButtonStyle"
+                android:background="@drawable/round_button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:onClick="takePicture" />
 
         </LinearLayout>
 

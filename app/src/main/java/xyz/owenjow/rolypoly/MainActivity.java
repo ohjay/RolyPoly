@@ -62,19 +62,6 @@ public class MainActivity extends AppCompatActivity {
             FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
             camera_view.addView(mCameraPreview);//add the SurfaceView to the layout
 
-            Button captureButton = new Button(this);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER_VERTICAL | Gravity.RIGHT
-            );
-            captureButton.setLayoutParams(params);
-            camera_view.addView(captureButton);
-
-            Drawable cameraButton = getResources().getDrawable(R.drawable.round_button);
-            cameraButton.setAlpha(170);
-            captureButton.setBackground(cameraButton);
-
             mCameraPreview.setOnTouchListener(new View.OnTouchListener() {
                 @Override
                 public boolean onTouch(View v, MotionEvent event) {
