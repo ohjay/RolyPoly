@@ -24,21 +24,9 @@ public class CameraActivity extends Activity {
         setContentView(R.layout.activity_main);
 
         // Create an instance of Camera
-        mCamera = getCameraInstance();
+        mCamera = getIntent().getSerializableExtra("CAMERA_INSTANCE");
 
         mCamera.takePicture(null, null, mPicture);
-    }
-
-    /** A safe way to get an instance of the Camera object. */
-    public static Camera getCameraInstance(){
-        Camera c = null;
-        try {
-            c = Camera.open(); // attempt to get a Camera instance
-        }
-        catch (Exception e){
-            // Camera is not available (in use or does not exist)
-        }
-        return c; // returns null if camera is unavailable
     }
 
     public static final int MEDIA_TYPE_IMAGE = 1;

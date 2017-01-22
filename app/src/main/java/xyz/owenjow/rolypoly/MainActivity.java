@@ -115,7 +115,7 @@ public class MainActivity extends AppCompatActivity {
         findViewById(R.id.dummy_button).setOnTouchListener(mDelayHideTouchListener);
 
         try{
-            mCamera = Camera.open();//you can use open(int) to use different cameras
+            mCamera = Camera.open(findFrontFacingCamera());//you can use open(int) to use different cameras
         } catch (Exception e){
             Log.d("ERROR", "Failed to get camera: " + e.getMessage());
         }
@@ -180,10 +180,29 @@ public class MainActivity extends AppCompatActivity {
         mHideHandler.postDelayed(mHideRunnable, delayMillis);
     }
 
+    public Camera CAMERA_INSTANCE = mCamera;
     public void takePicture(View view) {
         Intent intent = new Intent(this, CameraActivity.class);
+        intent.putExtra(CAMERA_INSTANCE, mCamera);
         startActivity(intent);
     }
 
+    private int cameraId;
+    private boolean cameraFront;
+    private int findFrontFacingCamera() {
+
+        // Search for the front facing camera
+        int numberOfCameras = Camera.getNumberOfCameras();
+        for (int i = 0; i < numberOfCameras; i++) {
+            Camera.CameraInfo info = new Camera.CameraInfo();
+            Camera.getCameraInfo(i, info);
+            if (info.facing == Camera.CameraInfo.CAMERA_FACING_FRONT) {
+                cameraId = i;
+                cameraFront = true;
+                break;
+            }
+        }
+        return cameraId;
+    }
 
 }
