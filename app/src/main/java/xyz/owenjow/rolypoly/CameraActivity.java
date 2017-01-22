@@ -1,17 +1,13 @@
 package xyz.owenjow.rolypoly;
-import android.Manifest;
 import android.app.Activity;
-import android.content.Context;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.os.Bundle;
 import android.hardware.Camera;
-import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.util.Log;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -20,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import static xyz.owenjow.rolypoly.CameraPreview.mFaceView;
 import static xyz.owenjow.rolypoly.MainActivity.mCamera;
 
 public class CameraActivity extends Activity {
@@ -27,12 +25,18 @@ public class CameraActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_camera);
+
+        if (mFaceView != null && mFaceView.getParent() != null) {
+            ((ViewGroup) mFaceView.getParent()).removeView(mFaceView);
+        }
+
+        addContentView(mFaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         // Create an instance of Camera
         try{
             mCamera.takePicture(null, null, mPicture);
-            Log.d("picture", "call takePicture");
+            Log.d("takePicture", "call takePicture");
         } catch (Exception e){
             Log.d("ERROR", "Failed to get camera: " + e.getMessage());
         }
@@ -63,7 +67,7 @@ public class CameraActivity extends Activity {
             return null;
         }
 
-        Log.d("picture", mediaFile.toString());
+        Log.d("getOutPutMediaFile", mediaFile.toString());
 
         return mediaFile;
     }
@@ -73,7 +77,7 @@ public class CameraActivity extends Activity {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            Log.d("picture", "took picture in on picture taken");
+            Log.d("onPictureTaken", "saved file");
             File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
             if (pictureFile == null){
                 Log.d(TAG, "Error creating media file, check storage permissions: ");
@@ -91,7 +95,17 @@ public class CameraActivity extends Activity {
 
                     ImageView myImage = (ImageView) findViewById(R.id.image_preview);
 
+                    Bitmap myBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.rolypoly);
+
                     myImage.setImageBitmap(myBitmap);
+
+                    Matrix matrix = new Matrix();
+                    myImage.setScaleType(ImageView.ScaleType.MATRIX);   //required
+                    matrix.postRotate((float) 90, myImage.getDrawable().getBounds().width()/2,
+                            myImage.getDrawable().getBounds().height()/2);
+                    myImage.setImageMatrix(matrix);
+
+                    Log.d("ImagePreview", "inserted into ImageView");
 
                 }
 
@@ -102,7 +116,6 @@ public class CameraActivity extends Activity {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
             camera.startPreview();
-            releaseCamera();
         }
     };
 

@@ -1,12 +1,13 @@
 package xyz.owenjow.rolypoly;
 
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
+import android.view.ViewGroup;
+import android.view.Window;
 
 import java.io.IOException;
 
@@ -16,9 +17,31 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
+    // Holds the Face Detection result:
+    private Camera.Face[] mFaces;
+
+    // Draw rectangles and other fancy stuff:
+    public static FaceOverlayView mFaceView;
+
+    /**
+     * Sets the faces for the overlay view, so it can be updated
+     * and the face overlays will be drawn again.
+     */
+    private Camera.FaceDetectionListener faceDetectionListener = new Camera.FaceDetectionListener() {
+        @Override
+        public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+//            Log.d("onFaceDetection", "Number of Faces:" + faces.length);
+            // Update the view now!
+            mFaceView.setFaces(faces);
+        }
+    };
+
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
+
+        // Now create the OverlayView:
+        mFaceView = new FaceOverlayView(context);
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -31,6 +54,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
+            mCamera.setFaceDetectionListener(faceDetectionListener);
+            mCamera.startFaceDetection();
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {

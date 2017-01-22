@@ -4,6 +4,9 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Matrix;
+import android.graphics.Rect;
+import android.graphics.RectF;
 import android.graphics.drawable.Drawable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -20,6 +23,9 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
@@ -56,18 +62,49 @@ public class MainActivity extends AppCompatActivity {
             FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
             camera_view.addView(mCameraPreview);//add the SurfaceView to the layout
 
-            Button captureButton = new Button(this);
-            FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    FrameLayout.LayoutParams.WRAP_CONTENT,
-                    Gravity.CENTER_VERTICAL | Gravity.RIGHT
-            );
-            captureButton.setLayoutParams(params);
-            camera_view.addView(captureButton);
+            mCameraPreview.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent event) {
 
-            Drawable cameraButton = getResources().getDrawable(R.drawable.round_button);
-            cameraButton.setAlpha(170);
-            captureButton.setBackground(cameraButton);
+                    if (mCamera != null) {
+                        Camera camera = mCamera;
+                        camera.cancelAutoFocus();
+
+                        Camera.Parameters parameters = camera.getParameters();
+                        if (parameters.getFocusMode() != Camera.Parameters.FOCUS_MODE_AUTO) {
+                            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
+                        }
+                        if (parameters.getMaxNumFocusAreas() > 0) {
+                            ArrayList<Camera.Area> focusAreas = new ArrayList<Camera.Area>(1);
+                            focusAreas.add(new Camera.Area(new Rect(-1000, -1000, 1000, 0), 750));
+                            parameters.setFocusAreas(focusAreas);
+                        }
+
+                        try {
+                            camera.cancelAutoFocus();
+                            camera.setParameters(parameters);
+                            camera.startPreview();
+                            camera.autoFocus(new Camera.AutoFocusCallback() {
+                                @Override
+                                public void onAutoFocus(boolean success, Camera camera) {
+                                    if (camera.getParameters().getFocusMode() != Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE) {
+                                        Camera.Parameters parameters = camera.getParameters();
+                                        parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+                                        if (parameters.getMaxNumFocusAreas() > 0) {
+                                            parameters.setFocusAreas(null);
+                                        }
+                                        camera.setParameters(parameters);
+                                        camera.startPreview();
+                                    }
+                                }
+                            });
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    return true;
+                }
+            });
         }
     }
 
@@ -107,4 +144,5 @@ public class MainActivity extends AppCompatActivity {
         Intent intent = new Intent(this, IdentifyActivity.class);
         startActivity(intent);
     }
+
 }
