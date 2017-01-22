@@ -211,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         return c; // returns null if camera is unavailable
     }
 
+    public static final String TAG = "YOUR-TAG-NAME";
     private PictureCallback mPicture = new PictureCallback() {
 
         @Override
@@ -218,8 +219,7 @@ public class MainActivity extends AppCompatActivity {
 
             File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
             if (pictureFile == null){
-                Log.d(TAG, "Error creating media file, check storage permissions: " +
-                        e.getMessage());
+                Log.d(TAG, "Error creating media file, check storage permissions: ");
                 return;
             }
 

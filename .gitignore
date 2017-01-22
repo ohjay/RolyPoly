@@ -6,6 +6,7 @@ app/local.properties
 /.idea/libraries
 /.idea/encodings.xml
 /.idea/vcs.xml
+/.idea
 .DS_Store
 /build
 /captures
