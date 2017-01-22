@@ -1,6 +1,8 @@
 package xyz.owenjow.rolypoly;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -17,6 +19,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
+        mCamera.setDisplayOrientation(90);
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -66,6 +69,13 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         } catch (Exception e){
             Log.d(TAG, "Error starting camera preview: " + e.getMessage());
+        }
+
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            Camera.Parameters parameters = mCamera.getParameters();
+            parameters.set("orientation", "landscape");
+            // For Android 2.2 and above
+            mCamera.setDisplayOrientation(0);
         }
     }
 }
