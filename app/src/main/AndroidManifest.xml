@@ -36,7 +36,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CameraActivity"></activity>
+        <activity
+            android:name=".CameraActivity"
+            android:theme="@android:style/Theme.NoTitleBar.Fullscreen"></activity>
         <activity
             android:name="xyz.owenjow.rolypoly.IdentifyActivity"
             android:label="@string/title_activity_identify"

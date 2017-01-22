@@ -8,6 +8,8 @@ import android.os.Bundle;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import java.io.File;
@@ -25,6 +27,11 @@ public class CameraActivity extends Activity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
         setContentView(R.layout.activity_camera);
 
         if (mFaceView != null && mFaceView.getParent() != null) {
@@ -104,6 +111,7 @@ public class CameraActivity extends Activity {
                     matrix.postRotate((float) 90, myImage.getDrawable().getBounds().width()/2,
                             myImage.getDrawable().getBounds().height()/2);
                     myImage.setImageMatrix(matrix);
+                    myImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
 
                     Log.d("ImagePreview", "inserted into ImageView");
 
