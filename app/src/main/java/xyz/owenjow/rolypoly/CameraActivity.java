@@ -60,6 +60,8 @@ public class CameraActivity extends Activity {
             return null;
         }
 
+        Log.d("picture", mediaFile.toString());
+
         return mediaFile;
     }
 
@@ -79,11 +81,13 @@ public class CameraActivity extends Activity {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
+                Log.d("picture", "wrote file");
             } catch (FileNotFoundException e) {
                 Log.d(TAG, "File not found: " + e.getMessage());
             } catch (IOException e) {
                 Log.d(TAG, "Error accessing file: " + e.getMessage());
             }
+            camera.startPreview();
             releaseCamera();
         }
     };
