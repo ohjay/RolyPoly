@@ -16,14 +16,28 @@
         android:visibility="visible">
     </FrameLayout>
 
-    <FrameLayout
-        android:id="@+id/idle"
+    <RelativeLayout
+        android:id="@+id/idle_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:src="@drawable/rolypoly"
-        android:scaleType = "centerCrop"
-        android:visibility="invisible" >
-    </FrameLayout>
+        android:background="#59caf7"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/idle"
+            android:layout_height="wrap_content"
+            android:src="@drawable/whiterolypoly"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:background="#59caf7"
+            android:cropToPadding="false"
+            android:maxWidth="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->

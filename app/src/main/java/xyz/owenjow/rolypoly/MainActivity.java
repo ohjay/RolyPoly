@@ -23,6 +23,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -147,7 +148,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void toggleIdle(View view) {
         FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
-        FrameLayout idle_view = (FrameLayout)findViewById(R.id.idle);
+        RelativeLayout idle_view = (RelativeLayout)findViewById(R.id.idle_layout);
 
         if (camera_view.getVisibility() == View.VISIBLE) {
             camera_view.setVisibility(View.INVISIBLE);
