@@ -19,7 +19,6 @@ android {
         }
     }
 }
-apply plugin: 'java'
 buildscript {
     tasks.withType(JavaCompile) {
         sourceCompatibility = JavaVersion.VERSION_1_7
