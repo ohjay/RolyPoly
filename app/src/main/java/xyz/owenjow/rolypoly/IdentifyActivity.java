@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
-import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.MatOfRect;
 import org.opencv.core.Point;
@@ -40,7 +39,7 @@ public class IdentifyActivity extends AppCompatActivity {
             }
         });
     }
-/**
+
     //Source: http://docs.opencv.org/2.4/doc/tutorials/introduction/desktop_java/java_dev_intro.html#running-sbt-samples
     // Detects faces in an image, draws boxes around them, and writes the results
     // to "faceDetection.png".
@@ -71,5 +70,5 @@ public class IdentifyActivity extends AppCompatActivity {
             System.out.println(String.format("Writing %s", filename));
             Imgcodecs.imwrite(filename, image);
         }
-    }**/
+    }
 }
