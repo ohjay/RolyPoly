@@ -16,9 +16,32 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private SurfaceHolder mHolder;
     private Camera mCamera;
 
+    // Holds the Face Detection result:
+    private Camera.Face[] mFaces;
+
+    // Draw rectangles and other fancy stuff:
+    private FaceOverlayView mFaceView;
+
+    /**
+     * Sets the faces for the overlay view, so it can be updated
+     * and the face overlays will be drawn again.
+     */
+    private Camera.FaceDetectionListener faceDetectionListener = new Camera.FaceDetectionListener() {
+        @Override
+        public void onFaceDetection(Camera.Face[] faces, Camera camera) {
+            Log.d("onFaceDetection", "Number of Faces:" + faces.length);
+            // Update the view now!
+            mFaceView.setFaces(faces);
+        }
+    };
+
     public CameraPreview(Context context, Camera camera) {
         super(context);
         mCamera = camera;
+
+        // Now create the OverlayView:
+        mFaceView = new FaceOverlayView(this);
+        addContentView(mFaceView, new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.
@@ -31,6 +54,8 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     public void surfaceCreated(SurfaceHolder holder) {
         // The Surface has been created, now tell the camera where to draw the preview.
         try {
+            mCamera.setFaceDetectionListener(faceDetectionListener);
+            mCamera.startFaceDetection();
             mCamera.setPreviewDisplay(holder);
             mCamera.startPreview();
         } catch (IOException e) {
@@ -40,6 +65,11 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
     public void surfaceDestroyed(SurfaceHolder holder) {
         // empty. Take care of releasing the Camera preview in your activity.
+        mCamera.setPreviewCallback(null);
+        mCamera.setFaceDetectionListener(null);
+        mCamera.setErrorCallback(null);
+        mCamera.release();
+        mCamera = null;
     }
 
     public void surfaceChanged(SurfaceHolder holder, int format, int w, int h) {
