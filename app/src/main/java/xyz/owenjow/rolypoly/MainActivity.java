@@ -22,7 +22,7 @@ import android.view.View;
  */
 public class MainActivity extends AppCompatActivity {
 
-    private Camera mCamera = null;
+    public static Camera mCamera = null;
     private CameraPreview mCameraPreview = null;
 
     @Override
@@ -31,6 +31,10 @@ public class MainActivity extends AppCompatActivity {
 
         if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.CAMERA}, 1);
+        }
+
+        if (ContextCompat.checkSelfPermission(this.getApplicationContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
         }
 
         setContentView(R.layout.activity_main);

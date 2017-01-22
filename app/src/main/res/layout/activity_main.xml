@@ -34,7 +34,7 @@
 
             <Button
                 android:id="@+id/button_capture"
-                android:text="Capture"
+                android:text="@string/capture_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
