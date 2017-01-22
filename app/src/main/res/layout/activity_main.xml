@@ -12,8 +12,32 @@
     <FrameLayout
         android:id="@+id/camera_preview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:visibility="visible">
     </FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/idle_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#59caf7"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/idle"
+            android:layout_height="wrap_content"
+            android:src="@drawable/whiterolypoly"
+            android:scaleType="fitCenter"
+            android:adjustViewBounds="true"
+            android:layout_width="wrap_content"
+            android:background="#59caf7"
+            android:cropToPadding="false"
+            android:maxWidth="200dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
 
     <!-- This FrameLayout insets its children based on system windows using
          android:fitsSystemWindows. -->
@@ -22,7 +46,7 @@
         android:layout_height="match_parent"
         android:fitsSystemWindows="true">
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/fullscreen_content_controls"
             style="?metaButtonBarStyle"
             android:layout_width="match_parent"
@@ -30,16 +54,8 @@
             android:layout_gravity="bottom|center_horizontal"
             android:orientation="horizontal"
             android:layout_marginBottom="15dp"
-            tools:ignore="UselessParent">
-
-            <Button
-                android:text="Identify"
-                android:background="#2196F3"
-                android:layout_width="100dp"
-                android:layout_height="60dp"
-                android:id="@+id/identify_button"
-                android:onClick="goIdentify"
-                android:layout_marginLeft="25dp"/>
+            tools:ignore="UselessParent"
+            android:weightSum="3">
 
             <Button
                 android:id="@+id/button_capture"
@@ -47,7 +63,7 @@
                 android:background="@drawable/round_button"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
-                android:layout_marginLeft="25dp"
+                android:layout_centerInParent="true"
                 android:onClick="takePicture" />
 
             <Button
@@ -56,10 +72,29 @@
                 android:layout_width="100dp"
                 android:layout_height="60dp"
                 android:id="@+id/idle_button"
-                android:onClick="goIdle"
-                android:layout_marginLeft="25dp"/>
+                android:onClick="toggleIdle"
+                android:layout_centerVertical="true"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
+                android:layout_marginRight="20dp"
+                android:layout_marginEnd="20dp" />
 
-        </LinearLayout>
+            <Button
+                android:text="Identify"
+                android:background="#2196F3"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:id="@+id/identify_button"
+                android:onClick="goIdentify"
+                android:layout_marginLeft="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_alignBaseline="@+id/button_capture"
+                android:layout_alignBottom="@+id/button_capture"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
 
     </FrameLayout>
 

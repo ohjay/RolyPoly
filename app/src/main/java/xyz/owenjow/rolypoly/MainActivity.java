@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
+import android.widget.RelativeLayout;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -386,5 +387,18 @@ public class MainActivity extends AppCompatActivity {
         }
 
         return total;
+    }
+
+    public void toggleIdle(View view) {
+        FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
+        RelativeLayout idle_view = (RelativeLayout)findViewById(R.id.idle_layout);
+
+        if (camera_view.getVisibility() == View.VISIBLE) {
+            camera_view.setVisibility(View.INVISIBLE);
+            idle_view.setVisibility(View.VISIBLE);
+        } else {
+            camera_view.setVisibility(View.VISIBLE);
+            idle_view.setVisibility(View.INVISIBLE);
+        }
     }
 }
