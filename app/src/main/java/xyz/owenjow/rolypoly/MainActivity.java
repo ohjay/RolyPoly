@@ -82,16 +82,15 @@ public class MainActivity extends AppCompatActivity {
                     if (mCamera != null) {
                         Camera camera = mCamera;
                         camera.cancelAutoFocus();
-                        Rect focusRect = calculateTapArea(event.getX(), event.getY(), 1f);
 
                         Camera.Parameters parameters = camera.getParameters();
                         if (parameters.getFocusMode() != Camera.Parameters.FOCUS_MODE_AUTO) {
                             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_AUTO);
                         }
                         if (parameters.getMaxNumFocusAreas() > 0) {
-                            List<Camera.Area> mylist = new ArrayList<Camera.Area>();
-                            mylist.add(new Camera.Area(focusRect, 1000));
-                            parameters.setFocusAreas(mylist);
+                            ArrayList<Camera.Area> focusAreas = new ArrayList<Camera.Area>(1);
+                            focusAreas.add(new Camera.Area(new Rect(-1000, -1000, 1000, 0), 750));
+                            parameters.setFocusAreas(focusAreas);
                         }
 
                         try {
@@ -159,29 +158,4 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private int focusAreaSize = 210;
-    /**
-     * Convert touch position x:y to {@link Camera.Area} position -1000:-1000 to 1000:1000.
-     */
-    private Rect calculateTapArea(float x, float y, float coefficient) {
-        int areaSize = Float.valueOf(focusAreaSize * coefficient).intValue();
-
-        int left = clamp((int) x - areaSize / 2, 0, mCameraPreview.getWidth() - areaSize);
-        int top = clamp((int) y - areaSize / 2, 0, mCameraPreview.getHeight() - areaSize);
-
-        RectF rectF = new RectF(left, top, left + areaSize, top + areaSize);
-        Matrix.mapRect(rectF);
-
-        return new Rect(Math.round(rectF.left), Math.round(rectF.top), Math.round(rectF.right), Math.round(rectF.bottom));
-    }
-
-    private int clamp(int x, int min, int max) {
-        if (x > max) {
-            return max;
-        }
-        if (x < min) {
-            return min;
-        }
-        return x;
-    }
 }

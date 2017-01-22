@@ -30,7 +30,7 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
     private Camera.FaceDetectionListener faceDetectionListener = new Camera.FaceDetectionListener() {
         @Override
         public void onFaceDetection(Camera.Face[] faces, Camera camera) {
-            Log.d("onFaceDetection", "Number of Faces:" + faces.length);
+//            Log.d("onFaceDetection", "Number of Faces:" + faces.length);
             // Update the view now!
             mFaceView.setFaces(faces);
         }
