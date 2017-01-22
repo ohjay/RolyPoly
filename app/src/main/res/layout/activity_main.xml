@@ -28,10 +28,18 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
-            android:gravity="center"
             android:orientation="horizontal"
             android:layout_marginBottom="15dp"
             tools:ignore="UselessParent">
+
+            <Button
+                android:text="Identify"
+                android:background="#2196F3"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:id="@+id/identify_button"
+                android:onClick="goIdentify"
+                android:layout_marginLeft="25dp"/>
 
             <Button
                 android:id="@+id/button_capture"
@@ -39,16 +47,19 @@
                 android:background="@drawable/round_button"
                 android:layout_width="80dp"
                 android:layout_height="80dp"
+                android:layout_marginLeft="25dp"
                 android:onClick="takePicture" />
 
-        </LinearLayout>
-
             <Button
-                android:text="Identify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/identify_button"
-                android:onClick="goIdentify" />
+                android:text="Idle"
+                android:background="#F44336"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:id="@+id/idle_button"
+                android:onClick="goIdle"
+                android:layout_marginLeft="25dp"/>
+
+        </LinearLayout>
 
     </FrameLayout>
 
