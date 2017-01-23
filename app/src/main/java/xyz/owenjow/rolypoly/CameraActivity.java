@@ -120,18 +120,14 @@ public class CameraActivity extends Activity {
                             pictureFile.getAbsolutePath(),
                             options);
 
-                    myImage.setImageBitmap(myBitmap);
-
                     int rotation = getCameraPhotoOrientation(
                             CameraActivity.this,
                             Uri.fromFile(pictureFile),
                             pictureFile.getAbsolutePath());
 
-                    Matrix matrix = new Matrix();
-                    matrix.postRotate(rotation);
-                    Bitmap scaledBitmap = Bitmap.createScaledBitmap(myBitmap,myImage.getDrawable().getBounds().width(),
-                            myImage.getDrawable().getBounds().height(),true);
-                    Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
+                    Log.d("rotation number", rotation + "");
+
+                    Bitmap rotatedBitmap = rotateImage(myBitmap, rotation);
                     myImage.setImageBitmap(rotatedBitmap);
 
                     Paint myRectPaint = new Paint();
@@ -177,6 +173,13 @@ public class CameraActivity extends Activity {
             camera.startPreview();
         }
     };
+
+    public static Bitmap rotateImage(Bitmap source, int angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
+    }
 
     public int getCameraPhotoOrientation(Context context, Uri imageUri, String imagePath){
         int rotate = 0;
