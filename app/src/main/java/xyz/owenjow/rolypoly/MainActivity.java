@@ -28,6 +28,8 @@ import android.widget.RelativeLayout;
 import java.util.ArrayList;
 import java.util.List;
 
+import static xyz.owenjow.rolypoly.CameraPreview.mFaceView;
+
 /**
  * An example full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
@@ -62,6 +64,7 @@ public class MainActivity extends AppCompatActivity {
             mCameraPreview = new CameraPreview(this, mCamera);//create a SurfaceView to show camera data
             FrameLayout camera_view = (FrameLayout)findViewById(R.id.camera_preview);
             camera_view.addView(mCameraPreview);//add the SurfaceView to the layout
+            camera_view.addView(mFaceView);
 
             mCameraPreview.setOnTouchListener(new View.OnTouchListener() {
                 @Override

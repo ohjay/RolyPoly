@@ -8,6 +8,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.LinearLayout;
 
 import java.io.IOException;
 
@@ -42,6 +43,9 @@ public class CameraPreview extends SurfaceView implements SurfaceHolder.Callback
 
         // Now create the OverlayView:
         mFaceView = new FaceOverlayView(context);
+        mFaceView.setLayoutParams(new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT));
 
         // Install a SurfaceHolder.Callback so we get notified when the
         // underlying surface is created and destroyed.

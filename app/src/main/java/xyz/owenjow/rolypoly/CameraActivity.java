@@ -34,11 +34,12 @@ public class CameraActivity extends Activity {
 
         setContentView(R.layout.activity_camera);
 
-        if (mFaceView != null && mFaceView.getParent() != null) {
-            ((ViewGroup) mFaceView.getParent()).removeView(mFaceView);
-        }
-
-        addContentView(mFaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+//        if (mFaceView != null && mFaceView.getParent() != null) {
+//            ((ViewGroup) mFaceView.getParent()).removeView(mFaceView);
+//        }
+//
+//        addContentView(mFaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
+//                ViewGroup.LayoutParams.MATCH_PARENT));
 
         // Create an instance of Camera
         try{
