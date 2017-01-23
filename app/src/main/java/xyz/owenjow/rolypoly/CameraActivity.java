@@ -1,6 +1,7 @@
 package xyz.owenjow.rolypoly;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -9,6 +10,7 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.hardware.Camera;
@@ -120,13 +122,15 @@ public class CameraActivity extends Activity {
 
                     myImage.setImageBitmap(myBitmap);
 
+                    int rotation = getCameraPhotoOrientation(
+                            CameraActivity.this,
+                            Uri.fromFile(pictureFile),
+                            pictureFile.getAbsolutePath());
+
                     Matrix matrix = new Matrix();
-
-                    matrix.postRotate(90);
-
+                    matrix.postRotate(rotation);
                     Bitmap scaledBitmap = Bitmap.createScaledBitmap(myBitmap,myImage.getDrawable().getBounds().width(),
                             myImage.getDrawable().getBounds().height(),true);
-
                     Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
                     myImage.setImageBitmap(rotatedBitmap);
 
@@ -173,6 +177,35 @@ public class CameraActivity extends Activity {
             camera.startPreview();
         }
     };
+
+    public int getCameraPhotoOrientation(Context context, Uri imageUri, String imagePath){
+        int rotate = 0;
+        try {
+            context.getContentResolver().notifyChange(imageUri, null);
+            File imageFile = new File(imagePath);
+
+            ExifInterface exif = new ExifInterface(imageFile.getAbsolutePath());
+            int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, ExifInterface.ORIENTATION_NORMAL);
+
+            switch (orientation) {
+                case ExifInterface.ORIENTATION_ROTATE_270:
+                    rotate = 270;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_180:
+                    rotate = 180;
+                    break;
+                case ExifInterface.ORIENTATION_ROTATE_90:
+                    rotate = 90;
+                    break;
+            }
+
+            Log.i("RotateImage", "Exif orientation: " + orientation);
+            Log.i("RotateImage", "Rotate value: " + rotate);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return rotate;
+    }
 
     public void releaseCamera(){
         if (mCamera != null){
