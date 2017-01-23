@@ -1,16 +1,28 @@
 package xyz.owenjow.rolypoly;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.graphics.Paint;
+import android.graphics.RectF;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.hardware.Camera;
 import android.util.Log;
+import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageView;
+
+import com.google.android.gms.vision.Frame;
+import com.google.android.gms.vision.face.Face;
+import com.google.android.gms.vision.face.FaceDetector;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -99,19 +111,16 @@ public class CameraActivity extends Activity {
 
                 if(pictureFile.exists()){
 
-                    Bitmap myBitmap = BitmapFactory.decodeFile(pictureFile.getAbsolutePath());
-
                     ImageView myImage = (ImageView) findViewById(R.id.image_preview);
-
-                    Bitmap myBitmap2 = BitmapFactory.decodeResource(getResources(), R.drawable.rolypoly);
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    options.inMutable=true;
+                    Bitmap myBitmap = BitmapFactory.decodeFile(
+                            pictureFile.getAbsolutePath(),
+                            options);
 
                     myImage.setImageBitmap(myBitmap);
 
                     Matrix matrix = new Matrix();
-//                    myImage.setScaleType(ImageView.ScaleType.MATRIX);
-//                    matrix.postRotate((float) 90, myImage.getDrawable().getBounds().width()/2,
-//                            myImage.getDrawable().getBounds().height()/2);
-//                    myImage.setImageMatrix(matrix);
 
                     matrix.postRotate(90);
 
@@ -119,8 +128,37 @@ public class CameraActivity extends Activity {
                             myImage.getDrawable().getBounds().height(),true);
 
                     Bitmap rotatedBitmap = Bitmap.createBitmap(scaledBitmap , 0, 0, scaledBitmap .getWidth(), scaledBitmap .getHeight(), matrix, true);
-//                    myImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
                     myImage.setImageBitmap(rotatedBitmap);
+
+                    Paint myRectPaint = new Paint();
+                    myRectPaint.setStrokeWidth(5);
+                    myRectPaint.setColor(Color.RED);
+                    myRectPaint.setStyle(Paint.Style.STROKE);
+
+                    Bitmap tempBitmap = Bitmap.createBitmap(rotatedBitmap.getWidth(), rotatedBitmap.getHeight(), Bitmap.Config.RGB_565);
+                    Canvas tempCanvas = new Canvas(tempBitmap);
+                    tempCanvas.drawBitmap(rotatedBitmap, 0, 0, null);
+
+                    FaceDetector faceDetector = new
+                            FaceDetector.Builder(getApplicationContext()).setTrackingEnabled(false)
+                            .build();
+                    if(!faceDetector.isOperational()){
+                        Log.d("Face Detector", "could not set up face detector!");
+                        return;
+                    }
+
+                    Frame frame = new Frame.Builder().setBitmap(rotatedBitmap).build();
+                    SparseArray<Face> faces = faceDetector.detect(frame);
+
+                    for(int i=0; i<faces.size(); i++) {
+                        Face thisFace = faces.valueAt(i);
+                        float x1 = thisFace.getPosition().x;
+                        float y1 = thisFace.getPosition().y;
+                        float x2 = x1 + thisFace.getWidth();
+                        float y2 = y1 + thisFace.getHeight();
+                        tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myRectPaint);
+                    }
+                    myImage.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
 
                     Log.d("ImagePreview", "inserted into ImageView");
 
