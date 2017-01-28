@@ -17,25 +17,37 @@ import android.os.Bundle;
 import android.hardware.Camera;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
 import com.google.android.gms.vision.face.FaceDetector;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.OutputStreamWriter;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static xyz.owenjow.rolypoly.CameraPreview.mFaceView;
@@ -44,6 +56,7 @@ import static xyz.owenjow.rolypoly.MainActivity.mCamera;
 public class CameraActivity extends Activity {
 
     int mOrientation;
+    Map<Face, String> facesAndNames;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -180,24 +193,36 @@ public class CameraActivity extends Activity {
                                     System.out.println("Touching down!");
 
                                     for(int i=0; i<faces.size(); i++){
-                                        Face face = faces.valueAt(i);
+                                        final Face face = faces.valueAt(i);
                                         RectF faceRect = rectFromFace(face);
                                         System.out.println("rect " + String.valueOf(faceRect.left) + " " + String.valueOf(faceRect.right)
                                                 + " " + String.valueOf(faceRect.top) + " " + String.valueOf(faceRect.bottom));
                                         if(faceRect.contains(touchX, touchY)){
                                             System.out.println("Touched Face Rectangle.");
 
-                                            RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.activity_camera);
+                                            RelativeLayout layout = (RelativeLayout) findViewById(R.id.activity_camera);
                                             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                                    50,
-                                                    30);
+                                                    ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+                                            params.setMargins((int) faceRect.left, (int) faceRect.top, (int) faceRect.right, (int) faceRect.bottom);
 
                                             EditText faceEdit= new EditText(CameraActivity.this);
                                             faceEdit.setId(i);
-                                            faceEdit.setLayoutParams(params);
                                             faceEdit.setHint("Enter student name");
 
-                                            layout.addView(faceEdit);
+                                            faceEdit.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+                                                @Override
+                                                public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
+                                                    if ( (actionId == EditorInfo.IME_ACTION_DONE) || ((event.getKeyCode() == KeyEvent.KEYCODE_ENTER) && (event.getAction() == KeyEvent.ACTION_DOWN ))){
+                                                        handleNameSubmit(v, face);
+                                                        return true;
+                                                    }
+                                                    else{
+                                                        return false;
+                                                    }
+                                                }
+                                            });
+
+                                            layout.addView(faceEdit, params);
 
                                         }
                                     }
@@ -232,6 +257,58 @@ public class CameraActivity extends Activity {
             camera.startPreview();
         }
     };
+
+    private void handleNameSubmit(TextView v, Face face) {
+        String nameText = v.getText().toString();
+        writeToFile(face, nameText);
+    }
+
+    private void writeToFile(Face face, String nameText) {
+
+        String filename = "facesAndNames";
+
+        try {
+            File mapFile = new File(new File(getFilesDir(),"")+ File.separator + filename);
+            FileOutputStream fileOutputStream = new FileOutputStream(mapFile);
+            ObjectOutputStream objectOutputStream= new ObjectOutputStream(fileOutputStream);
+
+            if (!facesAndNames) {
+                facesAndNames = new HashMap<Face, String>();
+            }
+
+            facesAndNames.putIfAbsent(face, nameText);
+
+            objectOutputStream.writeObject(facesAndNames);
+            objectOutputStream.close();
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
+        }
+    }
+
+    private Map<Face, String> readFromFile() {
+
+        Map<Face, String> faceAndNameMap = null;
+        String filename = "facesAndNames";
+
+        try {
+            File mapFile = new File(new File(getFilesDir(),"")+ File.separator + filename);
+            FileInputStream fileInputStream  = new FileInputStream(mapFile);
+            ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+
+            faceAndNameMap = (HashMap<Face, String>) objectInputStream.readObject();
+            objectInputStream.close();
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        return faceAndNameMap;
+    }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
