@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.hardware.Camera;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -152,13 +153,37 @@ public class CameraActivity extends Activity {
 
                     for(int i=0; i<faces.size(); i++) {
                         Face thisFace = faces.valueAt(i);
-                        float x1 = thisFace.getPosition().x;
-                        float y1 = thisFace.getPosition().y;
-                        float x2 = x1 + thisFace.getWidth();
-                        float y2 = y1 + thisFace.getHeight();
-                        tempCanvas.drawRoundRect(new RectF(x1, y1, x2, y2), 2, 2, myRectPaint);
+                        tempCanvas.drawRoundRect(rectFromFace(thisFace), 2, 2, myRectPaint);
                     }
                     myImage.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
+
+                    myImage.setOnTouchListener(new View.OnTouchListener()
+                    {
+                        @Override
+                        public boolean onTouch(View v, MotionEvent event)
+                        {
+                            int touchX = event.getX();
+                            int touchY = event.getY();
+                            switch(event){
+                                case MotionEvent.ACTION_DOWN:
+                                    System.out.println("Touching down!");
+                                    for(Face face : faces){
+                                        RectF faceRect = rectFromFace(face);
+                                        if(faceRect.contains(touchX,touchY)){
+                                            System.out.println("Touched Face Rectangle.");
+                                        }
+                                    }
+                                    break;
+                                case MotionEvent.ACTION_UP:
+                                    System.out.println("Touching up!");
+                                    break;
+                                case MotionEvent.ACTION_MOVE:
+                                    System.out.println("Sliding your finger around on the screen.");
+                                    break;
+                            }
+                            return true;
+                        }
+                    });
 
                     Log.d("ImagePreview", "inserted into ImageView");
 
@@ -173,6 +198,14 @@ public class CameraActivity extends Activity {
             camera.startPreview();
         }
     };
+
+    public static RectF rectFromFace(Face face) {
+        float x1 = face.getPosition().x;
+        float y1 = face.getPosition().y;
+        float x2 = x1 + face.getWidth();
+        float y2 = y1 + face.getHeight();
+        return new RectF(x1, y1, x2, y2);
+    }
 
     public static Bitmap rotateImage(Bitmap source, int angle) {
         Matrix matrix = new Matrix();
