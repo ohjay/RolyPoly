@@ -122,7 +122,7 @@ public class CameraActivity extends Activity {
 
                 if(pictureFile.exists()){
 
-                    ImageView myImage = (ImageView) findViewById(R.id.image_preview);
+                    final ImageView myImage = (ImageView) findViewById(R.id.image_preview);
                     BitmapFactory.Options options = new BitmapFactory.Options();
                     options.inMutable=true;
                     Bitmap myBitmap = BitmapFactory.decodeFile(
@@ -145,7 +145,7 @@ public class CameraActivity extends Activity {
                     myRectPaint.setStyle(Paint.Style.STROKE);
 
                     Bitmap tempBitmap = Bitmap.createBitmap(rotatedBitmap.getWidth(), rotatedBitmap.getHeight(), Bitmap.Config.RGB_565);
-                    Canvas tempCanvas = new Canvas(tempBitmap);
+                    final Canvas tempCanvas = new Canvas(tempBitmap);
                     tempCanvas.drawBitmap(rotatedBitmap, 0, 0, null);
 
                     FaceDetector faceDetector = new
@@ -166,13 +166,19 @@ public class CameraActivity extends Activity {
                         {
                             float touchX = event.getX();
                             float touchY = event.getY();
-                            setOrientationCoordinates(touchX, touchY);
+//                            if (mOrientation == ORIENTATION_LANDSCAPE) {
+//                                touchX = getFirst(touchY, touchY = touchX);
+//                                System.out.println("Changed coordinates");
+//                            }
+                            touchX = (touchX * ((float) tempCanvas.getWidth() / myImage.getRight()));
+                            touchY = (touchY * ((float) tempCanvas.getHeight() / myImage.getBottom()));
 
                             System.out.println("touchX: " + String.valueOf(touchX));
                             System.out.println("touchY: " + String.valueOf(touchY));
                             switch(event.getAction()){
                                 case MotionEvent.ACTION_DOWN:
                                     System.out.println("Touching down!");
+
                                     for(int i=0; i<faces.size(); i++){
                                         Face face = faces.valueAt(i);
                                         RectF faceRect = rectFromFace(face);
@@ -233,13 +239,8 @@ public class CameraActivity extends Activity {
         mOrientation = newConfig.orientation;
     }
 
-    public void setOrientationCoordinates(float x, float y) {
-        if (mOrientation == ORIENTATION_LANDSCAPE) {
-            float temp = x;
-            x = y;
-            y = temp;
-            System.out.println("Changed coordinates");
-        }
+    public float getFirst(float x, float y) {
+        return x;
     }
 
     public static RectF rectFromFace(Face face) {
