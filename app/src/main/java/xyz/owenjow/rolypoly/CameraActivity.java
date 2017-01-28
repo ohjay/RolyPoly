@@ -258,11 +258,13 @@ public class CameraActivity extends Activity {
             FileOutputStream fileOutputStream = new FileOutputStream(mapFile);
             ObjectOutputStream objectOutputStream= new ObjectOutputStream(fileOutputStream);
 
-            if (!facesAndNames) {
+            if (facesAndNames == null) {
                 facesAndNames = new HashMap<Face, String>();
             }
 
-            facesAndNames.putIfAbsent(face, nameText);
+            if (!facesAndNames.containsKey(face)) {
+                facesAndNames.put(face, nameText);
+            }
 
             objectOutputStream.writeObject(facesAndNames);
             objectOutputStream.close();
@@ -270,6 +272,8 @@ public class CameraActivity extends Activity {
         catch (IOException e) {
             Log.e("Exception", "File write failed: " + e.toString());
         }
+
+        System.out.println("Saved face and name mapping to file: " + filename);
     }
 
     private Map<Face, String> readFacesAndNamesFromFile() {
