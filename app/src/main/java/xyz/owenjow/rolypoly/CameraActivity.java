@@ -21,7 +21,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.google.android.gms.vision.Frame;
 import com.google.android.gms.vision.face.Face;
@@ -149,7 +151,7 @@ public class CameraActivity extends Activity {
                     }
 
                     Frame frame = new Frame.Builder().setBitmap(rotatedBitmap).build();
-                    SparseArray<Face> faces = faceDetector.detect(frame);
+                    final SparseArray<Face> faces = faceDetector.detect(frame);
 
                     for(int i=0; i<faces.size(); i++) {
                         Face thisFace = faces.valueAt(i);
@@ -162,15 +164,29 @@ public class CameraActivity extends Activity {
                         @Override
                         public boolean onTouch(View v, MotionEvent event)
                         {
-                            int touchX = event.getX();
-                            int touchY = event.getY();
-                            switch(event){
+                            float touchX = event.getX();
+                            float touchY = event.getY();
+                            switch(event.getAction()){
                                 case MotionEvent.ACTION_DOWN:
                                     System.out.println("Touching down!");
-                                    for(Face face : faces){
+                                    for(int i=0; i<faces.size(); i++){
+                                        Face face = faces.valueAt(i);
                                         RectF faceRect = rectFromFace(face);
                                         if(faceRect.contains(touchX,touchY)){
                                             System.out.println("Touched Face Rectangle.");
+
+                                            RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.activity_camera);
+                                            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
+                                                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
+                                                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
+
+                                            EditText faceEdit= new EditText(CameraActivity.this);
+                                            faceEdit.setId(i);
+                                            faceEdit.setLayoutParams(params);
+                                            faceEdit.setHint("Enter student name");
+
+                                            layout.addView(faceEdit);
+
                                         }
                                     }
                                     break;
