@@ -2,6 +2,7 @@ package xyz.owenjow.rolypoly;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -36,10 +37,13 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
 import static xyz.owenjow.rolypoly.CameraPreview.mFaceView;
 import static xyz.owenjow.rolypoly.MainActivity.mCamera;
 
 public class CameraActivity extends Activity {
+
+    int mOrientation;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class CameraActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_camera);
+
+        mOrientation = getResources().getConfiguration().orientation;
 
 //        if (mFaceView != null && mFaceView.getParent() != null) {
 //            ((ViewGroup) mFaceView.getParent()).removeView(mFaceView);
@@ -160,19 +166,25 @@ public class CameraActivity extends Activity {
                         {
                             float touchX = event.getX();
                             float touchY = event.getY();
+                            setOrientationCoordinates(touchX, touchY);
+
+                            System.out.println("touchX: " + String.valueOf(touchX));
+                            System.out.println("touchY: " + String.valueOf(touchY));
                             switch(event.getAction()){
                                 case MotionEvent.ACTION_DOWN:
                                     System.out.println("Touching down!");
                                     for(int i=0; i<faces.size(); i++){
                                         Face face = faces.valueAt(i);
                                         RectF faceRect = rectFromFace(face);
-                                        if(faceRect.contains(touchX,touchY)){
+                                        System.out.println("rect " + String.valueOf(faceRect.left) + " " + String.valueOf(faceRect.right)
+                                                + " " + String.valueOf(faceRect.top) + " " + String.valueOf(faceRect.bottom));
+                                        if(faceRect.contains(touchX, touchY)){
                                             System.out.println("Touched Face Rectangle.");
 
                                             RelativeLayout layout = (RelativeLayout) v.findViewById(R.id.activity_camera);
                                             RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                                                    android.widget.LinearLayout.LayoutParams.MATCH_PARENT,
-                                                    android.widget.LinearLayout.LayoutParams.WRAP_CONTENT);
+                                                    50,
+                                                    30);
 
                                             EditText faceEdit= new EditText(CameraActivity.this);
                                             faceEdit.setId(i);
@@ -214,6 +226,21 @@ public class CameraActivity extends Activity {
             camera.startPreview();
         }
     };
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        mOrientation = newConfig.orientation;
+    }
+
+    public void setOrientationCoordinates(float x, float y) {
+        if (mOrientation == ORIENTATION_LANDSCAPE) {
+            float temp = x;
+            x = y;
+            y = temp;
+            System.out.println("Changed coordinates");
+        }
+    }
 
     public static RectF rectFromFace(Face face) {
         float x1 = face.getPosition().x;
