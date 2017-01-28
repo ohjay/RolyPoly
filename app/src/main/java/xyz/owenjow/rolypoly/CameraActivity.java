@@ -153,12 +153,6 @@ public class CameraActivity extends Activity {
                     Frame frame = new Frame.Builder().setBitmap(rotatedBitmap).build();
                     final SparseArray<Face> faces = faceDetector.detect(frame);
 
-                    for(int i=0; i<faces.size(); i++) {
-                        Face thisFace = faces.valueAt(i);
-                        tempCanvas.drawRoundRect(rectFromFace(thisFace), 2, 2, myRectPaint);
-                    }
-                    myImage.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
-
                     myImage.setOnTouchListener(new View.OnTouchListener()
                     {
                         @Override
@@ -201,6 +195,12 @@ public class CameraActivity extends Activity {
                         }
                     });
 
+                    for(int i=0; i<faces.size(); i++) {
+                        Face thisFace = faces.valueAt(i);
+                        tempCanvas.drawRoundRect(rectFromFace(thisFace), 2, 2, myRectPaint);
+                    }
+                    myImage.setImageDrawable(new BitmapDrawable(getResources(),tempBitmap));
+
                     Log.d("ImagePreview", "inserted into ImageView");
 
                 }
@@ -220,6 +220,7 @@ public class CameraActivity extends Activity {
         float y1 = face.getPosition().y;
         float x2 = x1 + face.getWidth();
         float y2 = y1 + face.getHeight();
+        Log.d("rectFromFace", "new rectangle");
         return new RectF(x1, y1, x2, y2);
     }
 
