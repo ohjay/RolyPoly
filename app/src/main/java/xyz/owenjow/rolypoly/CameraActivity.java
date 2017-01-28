@@ -55,7 +55,6 @@ import static xyz.owenjow.rolypoly.MainActivity.mCamera;
 
 public class CameraActivity extends Activity {
 
-    int mOrientation;
     Map<Face, String> facesAndNames;
 
     @Override
@@ -67,15 +66,6 @@ public class CameraActivity extends Activity {
                 WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         setContentView(R.layout.activity_camera);
-
-        mOrientation = getResources().getConfiguration().orientation;
-
-//        if (mFaceView != null && mFaceView.getParent() != null) {
-//            ((ViewGroup) mFaceView.getParent()).removeView(mFaceView);
-//        }
-//
-//        addContentView(mFaceView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-//                ViewGroup.LayoutParams.MATCH_PARENT));
 
         // Create an instance of Camera
         try{
@@ -179,10 +169,6 @@ public class CameraActivity extends Activity {
                         {
                             float touchX = event.getX();
                             float touchY = event.getY();
-//                            if (mOrientation == ORIENTATION_LANDSCAPE) {
-//                                touchX = getFirst(touchY, touchY = touchX);
-//                                System.out.println("Changed coordinates");
-//                            }
                             touchX = (touchX * ((float) tempCanvas.getWidth() / myImage.getRight()));
                             touchY = (touchY * ((float) tempCanvas.getHeight() / myImage.getBottom()));
 
@@ -286,7 +272,7 @@ public class CameraActivity extends Activity {
         }
     }
 
-    private Map<Face, String> readFromFile() {
+    private Map<Face, String> readFacesAndNamesFromFile() {
 
         Map<Face, String> faceAndNameMap = null;
         String filename = "facesAndNames";
@@ -308,16 +294,6 @@ public class CameraActivity extends Activity {
         }
 
         return faceAndNameMap;
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        super.onConfigurationChanged(newConfig);
-        mOrientation = newConfig.orientation;
-    }
-
-    public float getFirst(float x, float y) {
-        return x;
     }
 
     public static RectF rectFromFace(Face face) {
