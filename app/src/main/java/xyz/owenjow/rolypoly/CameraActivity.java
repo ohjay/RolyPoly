@@ -50,6 +50,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static android.content.res.Configuration.ORIENTATION_LANDSCAPE;
+import static android.os.Environment.DIRECTORY_RINGTONES;
 import static xyz.owenjow.rolypoly.CameraPreview.mFaceView;
 import static xyz.owenjow.rolypoly.MainActivity.mCamera;
 
@@ -92,11 +93,8 @@ public class CameraActivity extends Activity {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         File mediaFile;
         if (type == MEDIA_TYPE_IMAGE){
-            mediaFile = new File(getFilesDir() + File.separator +
+            mediaFile = new File(getExternalFilesDir(DIRECTORY_RINGTONES) + File.separator +
                     "IMG_"+ timeStamp + ".jpg");
-        } else if(type == MEDIA_TYPE_VIDEO) {
-            mediaFile = new File(getFilesDir() + File.separator +
-                    "VID_"+ timeStamp + ".mp4");
         } else {
             return null;
         }
@@ -111,7 +109,7 @@ public class CameraActivity extends Activity {
 
         @Override
         public void onPictureTaken(byte[] data, Camera camera) {
-            Log.d("onPictureTaken", "saved file");
+            Log.d("onPictureTaken", "trying to save file");
             File pictureFile = getOutputMediaFile(MEDIA_TYPE_IMAGE);
             if (pictureFile == null){
                 Log.d(TAG, "Error creating media file, check storage permissions: ");
@@ -122,6 +120,7 @@ public class CameraActivity extends Activity {
                 FileOutputStream fos = new FileOutputStream(pictureFile);
                 fos.write(data);
                 fos.close();
+                Log.d("onPictureTaken", "saved file");
 
                 if(pictureFile.exists()){
 
